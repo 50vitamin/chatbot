@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="게임처럼 배우는 Orca. Claude Code, Codex, 브라우저, GitHub, Netlify 흐름을 레벨별 퀘스트로 익힙니다." />
+  <title>ORCA QUEST - 게임처럼 배우는 Orca</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <style>
+    :root{
+      --bg1:#0f172a;
+      --bg2:#111827;
+      --card:#ffffff;
+      --text:#0f172a;
+      --muted:#64748b;
+      --line:#e2e8f0;
+      --primary:#06b6d4;
+      --primary2:#3b82f6;
+      --accent:#a78bfa;
+      --success:#22c55e;
+      --warning:#f59e0b;
+      --danger:#ef4444;
+      --soft:#f8fafc;
+      --gold:#fbbf24;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      color:#e5eefb;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(59,130,246,.24), transparent 25%),
+        radial-gradient(circle at 85% 15%, rgba(167,139,250,.22), transparent 25%),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      line-height:1.6;
+    }
+
+    .container{
+      width:min(1180px, 92%);
+      margin:0 auto;
+      padding:28px 0 80px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:24px;
+      align-items:center;
+      margin-top:10px;
+    }
+
+    .panel{
+      background:rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,0.14);
+      border-radius:24px;
+      box-shadow:0 20px 40px rgba(0,0,0,.22);
+    }
+
+    .hero-copy{
+      padding:34px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(6,182,212,.15);
+      color:#a5f3fc;
+      font-weight:700;
+      font-size:14px;
+      letter-spacing:.2px;
+    }
+
+    h1{
+      margin:16px 0 12px;
+      font-size:clamp(34px, 5vw, 58px);
+      line-height:1.08;
+      letter-spacing:-1.4px;
+    }
+
+    .hero-copy p{
+      margin:12px 0;
+      color:#d8e4f7;
+      font-size:17px;
+    }
+
+    .badge-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .badge{
+      padding:9px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.11);
+      border:1px solid rgba(255,255,255,.12);
+      font-size:14px;
+      font-weight:700;
+      color:#ecfeff;
+    }
+
+    .hero-art{
+      padding:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .art-frame{
+      width:100%;
+      max-width:430px;
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.12);
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      padding:14px 14px 16px;
+      gap:12px;
+    }
+
+    .float-star{
+      position:absolute;
+      font-size:22px;
+      opacity:.92;
+      animation: float 3.4s ease-in-out infinite;
+      z-index:2;
+      pointer-events:none;
+    }
+    .star1{left:18px; top:12px}
+    .star2{right:18px; top:18px; animation-delay:.5s}
+    .star3{left:22px; top:132px; animation-delay:1s}
+    .star4{right:20px; top:128px; animation-delay:.8s}
+
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-10px)}
+    }
+
+    .art-illustration{
+      height:168px;
+      border-radius:18px;
+      overflow:hidden;
+      flex-shrink:0;
+    }
+
+    .art-illustration svg{
+      width:100%;
+      height:100%;
+      display:block;
+    }
+
+    .orca-ship{
+      width:100%;
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(255,255,255,.15);
+      border-radius:22px;
+      padding:14px 14px 16px;
+      box-shadow:0 16px 30px rgba(0,0,0,.25);
+    }
+
+    .mini-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:12px;
+      font-size:13px;
+      color:#dbeafe;
+    }
+
+    .mini-browser{
+      background:#0b1220;
+      border-radius:18px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.09);
+    }
+
+    .window-top{
+      display:flex;
+      gap:6px;
+      margin-bottom:10px;
+    }
+
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.red{background:#f87171}
+    .dot.yellow{background:#fbbf24}
+    .dot.green{background:#34d399}
+
+    .quest-scene{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+
+    .char{
+      border-radius:16px;
+      padding:12px 12px 12px;
+      min-height:96px;
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .char h4{
+      margin:0 0 4px;
+      font-size:15px;
+      color:#fff;
+      padding-right:34px;
+    }
+
+    .char p{
+      margin:0;
+      font-size:12.5px;
+      color:#cbd5e1;
+      padding-right:8px;
+    }
+
+    .char .emoji{
+      font-size:26px;
+      position:absolute;
+      right:10px;
+      top:10px;
+    }
+
+    .c1{background:linear-gradient(135deg, rgba(6,182,212,.28), rgba(30,41,59,.4))}
+    .c2{background:linear-gradient(135deg, rgba(59,130,246,.28), rgba(30,41,59,.4))}
+    .c3{background:linear-gradient(135deg, rgba(167,139,250,.28), rgba(30,41,59,.4))}
+    .c4{background:linear-gradient(135deg, rgba(34,197,94,.24), rgba(30,41,59,.4))}
+
+    .section{
+      margin-top:28px;
+    }
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .section-title h2{
+      margin:0;
+      font-size:clamp(24px, 3vw, 30px);
+      letter-spacing:-0.7px;
+    }
+
+    .section-title .orb{
+      width:16px;height:16px;border-radius:50%;
+      background:linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow:0 0 22px rgba(59,130,246,.7);
+      flex-shrink:0;
+    }
+
+    .grid{
+      display:grid;
+      gap:18px;
+    }
+
+    .qa-grid{
+      grid-template-columns:repeat(2, minmax(0,1fr));
+    }
+
+    .card{
+      background:var(--card);
+      color:var(--text);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 18px 36px rgba(2,8,23,.14);
+      border:1px solid var(--line);
+    }
+
+    .card h3{
+      margin:0 0 8px;
+      font-size:22px;
+      letter-spacing:-0.4px;
+    }
+
+    .card p{
+      margin:8px 0;
+      color:#334155;
+    }
+
+    .answer{
+      background:#f8fbff;
+      border:1px solid #dbeafe;
+      padding:14px 16px;
+      border-radius:16px;
+      margin-top:10px;
+    }
+
+    .level-grid{
+      grid-template-columns:repeat(2, minmax(0,1fr));
+    }
+
+    .level-card{
+      position:relative;
+      overflow:hidden;
+      transition:transform .2s ease, outline-color .2s ease;
+    }
+
+    .level-card.cleared{
+      outline:3px solid rgba(34,197,94,.55);
+      transform:translateY(-2px);
+    }
+
+    .level-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:13px;
+      font-weight:800;
+      padding:6px 10px;
+      border-radius:999px;
+      color:#fff;
+      margin-bottom:10px;
+    }
+    .tag-green{background:linear-gradient(135deg, #16a34a, #22c55e)}
+    .tag-blue{background:linear-gradient(135deg, #0284c7, #3b82f6)}
+    .tag-purple{background:linear-gradient(135deg, #7c3aed, #a78bfa)}
+    .tag-orange{background:linear-gradient(135deg, #d97706, #f59e0b)}
+    .tag-red{background:linear-gradient(135deg, #dc2626, #ef4444)}
+
+    .xp{
+      display:inline-block;
+      margin-top:10px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:#fff7ed;
+      color:#9a3412;
+      font-size:13px;
+      font-weight:800;
+      border:1px solid #fed7aa;
+    }
+
+    .checklist{
+      padding-left:18px;
+      margin:10px 0 0;
+    }
+
+    .checklist li{
+      margin:6px 0;
+      color:#334155;
+    }
+
+    .mission-box{
+      border:1px dashed #cbd5e1;
+      background:#f8fafc;
+      border-radius:16px;
+      padding:14px;
+      margin-top:12px;
+      font-size:15px;
+    }
+
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    button.quest-btn{
+      border:none;
+      border-radius:12px;
+      padding:12px 15px;
+      cursor:pointer;
+      font-weight:800;
+      font-size:14px;
+      font-family:inherit;
+      transition:.2s ease;
+    }
+
+    .complete{
+      background:linear-gradient(135deg, #22c55e, #16a34a);
+      color:white;
+    }
+    .complete.is-done{
+      background:#0f172a;
+      color:#bbf7d0;
+    }
+    .reset{
+      background:#e2e8f0;
+      color:#0f172a;
+    }
+    button.quest-btn:hover{transform:translateY(-1px)}
+    button.quest-btn:focus-visible{
+      outline:3px solid #67e8f9;
+      outline-offset:2px;
+    }
+
+    .progress-wrap{
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:22px;
+      padding:20px;
+      margin-top:22px;
+    }
+
+    .progress-title{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      margin-bottom:12px;
+    }
+
+    .progress-bar{
+      width:100%;
+      height:16px;
+      background:rgba(255,255,255,.12);
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .progress-fill{
+      width:0%;
+      height:100%;
+      background:linear-gradient(90deg, var(--primary), var(--primary2), var(--accent));
+      transition:width .35s ease;
+    }
+
+    .npc-grid{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:16px;
+    }
+
+    .npc{
+      text-align:center;
+      background:var(--card);
+      color:var(--text);
+      border-radius:20px;
+      padding:20px 14px;
+      border:1px solid var(--line);
+      box-shadow:0 14px 28px rgba(2,8,23,.1);
+    }
+
+    .avatar{
+      width:88px;
+      height:88px;
+      margin:0 auto 12px;
+      border-radius:24px;
+      display:grid;
+      place-items:center;
+      font-size:42px;
+      background:linear-gradient(135deg,#e0f2fe,#ede9fe);
+      border:1px solid #dbeafe;
+    }
+
+    .npc h4{
+      margin:0 0 6px;
+      font-size:18px;
+    }
+
+    .npc p{
+      margin:0;
+      font-size:14px;
+      color:#475569;
+    }
+
+    .footer-card{
+      background:linear-gradient(135deg, rgba(6,182,212,.15), rgba(167,139,250,.15));
+      border:1px solid rgba(255,255,255,.12);
+      color:#eef8ff;
+      border-radius:24px;
+      padding:24px;
+    }
+
+    .footer-card code{
+      display:block;
+      white-space:pre-wrap;
+      margin-top:12px;
+      padding:16px;
+      border-radius:18px;
+      background:rgba(2,8,23,.45);
+      color:#dbeafe;
+      font-size:14px;
+      line-height:1.7;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .copy-note{
+      min-height:1.4em;
+      margin:10px 0 0;
+      font-size:14px;
+      color:#a5f3fc;
+      font-weight:700;
+    }
+
+    .small{
+      font-size:13px;
+      color:#cbd5e1;
+    }
+
+    @media (max-width: 980px){
+      .hero{grid-template-columns:1fr}
+      .qa-grid, .level-grid, .npc-grid{grid-template-columns:1fr}
+      .quest-scene{grid-template-columns:1fr}
+      .hero-copy{padding:24px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .float-star{animation:none}
+      .progress-fill, .level-card, button.quest-btn{transition:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <section class="hero">
+      <div class="hero-copy panel">
+        <div class="eyebrow">🎮 ORCA QUEST · 게임처럼 배우는 AI 개발</div>
+        <h1>Orca를<br>쉽고 재밌게 배우기</h1>
+        <p>
+          Orca는 그냥 브라우저가 아니라
+          <strong>AI 에이전트 개발팀을 운영하는 본부</strong>에 가깝습니다.
+        </p>
+        <p>
+          아래 퀘스트를 따라가면
+          <strong>Claude Code / Codex / Browser / GitHub / Netlify</strong>
+          흐름을 게임처럼 이해할 수 있습니다.
+        </p>
+
+        <div class="badge-row">
+          <span class="badge">🧠 쉽게 설명</span>
+          <span class="badge">🕹️ 레벨별 학습</span>
+          <span class="badge">👨‍⚕️ 혈액검사 웹앱 예시</span>
+          <span class="badge">🧪 테스트 자동화</span>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-title">
+            <strong>현재 모험 진행도</strong>
+            <strong id="progressText">0 / 5 CLEAR</strong>
+          </div>
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="progressBar" aria-label="퀘스트 진행도">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <p class="small" style="margin:10px 0 0">
+            각 레벨에서 <strong>클리어 버튼</strong>을 눌러 진행도를 올릴 수 있습니다. 진행도는 이 브라우저에 저장됩니다.
+          </p>
+        </div>
+      </div>
+
+      <div class="hero-art panel">
+        <div class="art-frame">
+          <div class="float-star star1" aria-hidden="true">✨</div>
+          <div class="float-star star2" aria-hidden="true">⭐</div>
+          <div class="float-star star3" aria-hidden="true">💫</div>
+          <div class="float-star star4" aria-hidden="true">✨</div>
+
+          <div class="art-illustration" aria-hidden="true">
+            <svg viewBox="0 0 500 500" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <linearGradient id="g1" x1="0" x2="1">
+                  <stop offset="0%" stop-color="#06b6d4"/>
+                  <stop offset="100%" stop-color="#3b82f6"/>
+                </linearGradient>
+                <linearGradient id="g2" x1="0" x2="1">
+                  <stop offset="0%" stop-color="#a78bfa"/>
+                  <stop offset="100%" stop-color="#60a5fa"/>
+                </linearGradient>
+              </defs>
+
+              <circle cx="130" cy="140" r="70" fill="rgba(6,182,212,.20)"/>
+              <circle cx="370" cy="120" r="55" fill="rgba(167,139,250,.20)"/>
+              <circle cx="380" cy="340" r="74" fill="rgba(59,130,246,.18)"/>
+
+              <rect x="78" y="170" rx="28" ry="28" width="344" height="208" fill="rgba(2,8,23,.45)" stroke="rgba(255,255,255,.14)"/>
+              <rect x="92" y="186" rx="18" ry="18" width="316" height="26" fill="rgba(255,255,255,.07)"/>
+              <circle cx="110" cy="199" r="5" fill="#f87171"/>
+              <circle cx="126" cy="199" r="5" fill="#fbbf24"/>
+              <circle cx="142" cy="199" r="5" fill="#34d399"/>
+
+              <rect x="106" y="230" rx="16" width="132" height="126" fill="rgba(6,182,212,.18)" stroke="rgba(255,255,255,.12)"/>
+              <rect x="262" y="230" rx="16" width="132" height="126" fill="rgba(167,139,250,.18)" stroke="rgba(255,255,255,.12)"/>
+
+              <circle cx="172" cy="272" r="26" fill="url(#g1)"/>
+              <circle cx="328" cy="272" r="26" fill="url(#g2)"/>
+
+              <rect x="139" y="306" rx="8" width="68" height="10" fill="rgba(255,255,255,.65)"/>
+              <rect x="297" y="306" rx="8" width="62" height="10" fill="rgba(255,255,255,.65)"/>
+
+              <rect x="126" y="324" rx="8" width="92" height="8" fill="rgba(255,255,255,.35)"/>
+              <rect x="282" y="324" rx="8" width="96" height="8" fill="rgba(255,255,255,.35)"/>
+
+              <path d="M250 112c20 0 36 16 36 36s-16 36-36 36-36-16-36-36 16-36 36-36z" fill="url(#g1)"/>
+              <path d="M220 160h60c20 0 36 16 36 36v15H184v-15c0-20 16-36 36-36z" fill="rgba(255,255,255,.15)"/>
+              <rect x="204" y="214" rx="12" width="92" height="16" fill="rgba(255,255,255,.18)"/>
+            </svg>
+          </div>
+
+          <div class="orca-ship">
+            <div class="mini-row">
+              <strong>🛸 ORCA 본부</strong>
+              <span>AI 팀 운영중</span>
+            </div>
+            <div class="mini-browser">
+              <div class="window-top" aria-hidden="true">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="quest-scene">
+                <div class="char c1">
+                  <div class="emoji" aria-hidden="true">🧙</div>
+                  <h4>Claude Code</h4>
+                  <p>구조 설계와 큰 수정 담당</p>
+                </div>
+                <div class="char c2">
+                  <div class="emoji" aria-hidden="true">🛠️</div>
+                  <h4>Codex</h4>
+                  <p>버그 수정과 테스트 담당</p>
+                </div>
+                <div class="char c3">
+                  <div class="emoji" aria-hidden="true">🧑‍⚕️</div>
+                  <h4>Dr K</h4>
+                  <p>PM + 의학 책임자</p>
+                </div>
+                <div class="char c4">
+                  <div class="emoji" aria-hidden="true">🐬</div>
+                  <h4>Orca Browser</h4>
+                  <p>실제 화면 검사와 자동화</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <span class="orb"></span>
+        <h2>먼저 답: Orca로 할 수 있는 것 7가지</h2>
+      </div>
+
+      <div class="grid qa-grid">
+        <div class="card">
+          <h3>1. 혈액검사 웹앱을 어디까지 자동 개발?</h3>
+          <p>상당 부분 가능합니다.</p>
+          <div class="answer">
+            <strong>가능한 것</strong><br>
+            화면 생성, 입력폼, 결과표, 파일 업로드, 모바일 UI, 테스트, 수정 반복<br><br>
+            <strong>직접 정해야 하는 것</strong><br>
+            의학적 판정 기준, 모듈 구조, 최종 판단 로직
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>2. Claude Code와 Codex는 어떻게 나눌까?</h3>
+          <p>역할을 나눠 쓰면 가장 편합니다.</p>
+          <div class="answer">
+            <strong>Claude Code</strong> = 큰 구조, UI, 긴 수정<br>
+            <strong>Codex</strong> = 코드 검토, 버그, 테스트, 리팩터링
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>3. Netlify 자동배포 가능?</h3>
+          <p>가능합니다.</p>
+          <div class="answer">
+            GitHub에 push → Netlify가 자동 빌드/배포<br>
+            preview 배포와 production 배포를 나눠서 운영 가능
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>4. OCR 테스트 자동화도 가능?</h3>
+          <p>가능합니다.</p>
+          <div class="answer">
+            검사표 업로드 → OCR 결과 확인 → 잘못 읽은 값 수정 → 다시 테스트<br>
+            이 반복 과정을 Orca에서 agent에게 맡길 수 있습니다.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>5. Cursor 대신 Orca?</h3>
+          <p>완전 대체라기보다 상위 지휘실에 가깝습니다.</p>
+          <div class="answer">
+            Cursor가 편한 코딩 툴이라면 유지하고<br>
+            Orca를 <strong>여러 agent를 동시에 돌리는 본부</strong>로 쓰는 방식이 좋습니다.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>6. 브라우저 자동화 / 정기 실행?</h3>
+          <p>가능합니다.</p>
+          <div class="answer">
+            버튼 클릭, 폼 입력, 화면 확인, 반복 테스트 같은 작업을 자동화하고<br>
+            정기 실행 구조도 설계할 수 있습니다.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>7. Windows 11 미니PC 상시 운용?</h3>
+          <p>가능합니다.</p>
+          <div class="answer">
+            미니PC를 개발 기지처럼 써서<br>
+            Orca + Claude + Codex + GitHub + Netlify 흐름을 상시 운영할 수 있습니다.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>한 줄 요약</h3>
+          <p>Orca는 코딩앱이라기보다 AI 직원들을 부리는 작업실입니다.</p>
+          <div class="answer">
+            <strong>내 역할</strong>: 목표와 기준 제시<br>
+            <strong>Orca 역할</strong>: 에이전트 실행, 분기, 비교, 테스트, 화면 확인
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <span class="orb"></span>
+        <h2>등장 캐릭터</h2>
+      </div>
+
+      <div class="npc-grid">
+        <div class="npc">
+          <div class="avatar" aria-hidden="true">🧑‍⚕️</div>
+          <h4>Dr K</h4>
+          <p>기획자 / 의학 책임자 / 최종 승인자</p>
+        </div>
+        <div class="npc">
+          <div class="avatar" aria-hidden="true">🧙</div>
+          <h4>Claude Code</h4>
+          <p>큰 구조와 긴 문맥 작업에 강함</p>
+        </div>
+        <div class="npc">
+          <div class="avatar" aria-hidden="true">🛠️</div>
+          <h4>Codex</h4>
+          <p>코드 리뷰 / 버그 수정 / 테스트 담당</p>
+        </div>
+        <div class="npc">
+          <div class="avatar" aria-hidden="true">🐬</div>
+          <h4>Orca</h4>
+          <p>브라우저 + 터미널 + worktree + agent 본부</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="quests">
+      <div class="section-title">
+        <span class="orb"></span>
+        <h2>🎮 Orca Quest: 레벨별로 배우기</h2>
+      </div>
+
+      <div class="grid level-grid">
+
+        <div class="card level-card" data-level="1">
+          <div class="level-tag tag-green">LEVEL 1 · 기지 건설</div>
+          <h3>Orca를 열고 첫 프로젝트 시작</h3>
+          <p><strong>목표</strong>: blood-lab-app 프로젝트를 시작합니다.</p>
+          <ul class="checklist">
+            <li>GitHub 저장소 생성</li>
+            <li>Orca에서 repo 열기</li>
+            <li>Claude Code agent 시작</li>
+            <li>입력폼이 있는 웹앱 기본 화면 만들기</li>
+          </ul>
+          <div class="mission-box">
+            <strong>미션 대사</strong><br>
+            “혈액검사 판독 웹앱을 만들 것이다. React 기반으로 시작하고,
+            우선 검사 항목을 수동 입력할 수 있는 최소 UI를 만들어라.”
+          </div>
+          <div class="xp">+100 XP</div>
+          <div class="btn-row">
+            <button type="button" class="quest-btn complete" onclick="toggleLevel(1)">레벨 1 클리어</button>
+            <button type="button" class="quest-btn reset" onclick="resetLevel(1)">초기화</button>
+          </div>
+        </div>
+
+        <div class="card level-card" data-level="2">
+          <div class="level-tag tag-blue">LEVEL 2 · 에이전트 대결</div>
+          <h3>Claude와 Codex를 경쟁시켜 보기</h3>
+          <p><strong>목표</strong>: 같은 문제를 두 agent에게 동시에 던집니다.</p>
+          <ul class="checklist">
+            <li>worktree A에 Claude 투입</li>
+            <li>worktree B에 Codex 투입</li>
+            <li>같은 UI 개선 요청</li>
+            <li>더 나은 결과를 직접 선택</li>
+          </ul>
+          <div class="mission-box">
+            <strong>미션 대사</strong><br>
+            “CBC, CMP, thyroid, iron, vitamin D 입력 UI를 모바일 친화적으로 만들어라.”
+          </div>
+          <div class="xp">+200 XP</div>
+          <div class="btn-row">
+            <button type="button" class="quest-btn complete" onclick="toggleLevel(2)">레벨 2 클리어</button>
+            <button type="button" class="quest-btn reset" onclick="resetLevel(2)">초기화</button>
+          </div>
+        </div>
+
+        <div class="card level-card" data-level="3">
+          <div class="level-tag tag-purple">LEVEL 3 · 모듈 몬스터</div>
+          <h3>검사 해석을 모듈로 나누기</h3>
+          <p><strong>목표</strong>: 한 덩어리 앱이 아니라 부품형 구조로 만듭니다.</p>
+          <ul class="checklist">
+            <li>thyroid module 분리</li>
+            <li>iron module 분리</li>
+            <li>inflammation / glucose / liver 확장</li>
+            <li>각 모듈 독립 테스트 가능하게 설계</li>
+          </ul>
+          <div class="mission-box">
+            <strong>예시 구조</strong><br>
+            modules / thyroid / iron / glucose / liver / kidney / hematology
+          </div>
+          <div class="xp">+300 XP</div>
+          <div class="btn-row">
+            <button type="button" class="quest-btn complete" onclick="toggleLevel(3)">레벨 3 클리어</button>
+            <button type="button" class="quest-btn reset" onclick="resetLevel(3)">초기화</button>
+          </div>
+        </div>
+
+        <div class="card level-card" data-level="4">
+          <div class="level-tag tag-orange">LEVEL 4 · OCR 보스전</div>
+          <h3>검사표 업로드 → 값 자동 추출</h3>
+          <p><strong>목표</strong>: OCR과 판정 엔진을 분리합니다.</p>
+          <ul class="checklist">
+            <li>검사표 업로드 기능</li>
+            <li>OCR로 검사명 / 수치 / 단위 추출</li>
+            <li>사용자 확인 단계 추가</li>
+            <li>구조화된 데이터로 판정 모듈 전달</li>
+          </ul>
+          <div class="mission-box">
+            <strong>핵심 원칙</strong><br>
+            OCR → 바로 의학판정 ❌<br>
+            OCR → 구조화 데이터 → 사용자 확인 → 판정 ✅
+          </div>
+          <div class="xp">+500 XP</div>
+          <div class="btn-row">
+            <button type="button" class="quest-btn complete" onclick="toggleLevel(4)">레벨 4 클리어</button>
+            <button type="button" class="quest-btn reset" onclick="resetLevel(4)">초기화</button>
+          </div>
+        </div>
+
+        <div class="card level-card" data-level="5">
+          <div class="level-tag tag-red">LEVEL 5 · QA 부대</div>
+          <h3>테스트 자동화와 배포</h3>
+          <p><strong>목표</strong>: 사람이 직접 반복하지 않게 만듭니다.</p>
+          <ul class="checklist">
+            <li>샘플 검사 결과 20개 자동 생성</li>
+            <li>브라우저에서 자동 입력 / 결과 확인</li>
+            <li>오류 발견 시 수정 후 재시험</li>
+            <li>GitHub → Netlify 배포</li>
+          </ul>
+          <div class="mission-box">
+            <strong>최종 승리 조건</strong><br>
+            스마트폰에서 bloodlab 앱이 실제로 열리고,
+            테스트 케이스가 정상 동작한다.
+          </div>
+          <div class="xp">+1000 XP</div>
+          <div class="btn-row">
+            <button type="button" class="quest-btn complete" onclick="toggleLevel(5)">레벨 5 클리어</button>
+            <button type="button" class="quest-btn reset" onclick="resetLevel(5)">초기화</button>
+          </div>
+        </div>
+
+        <div class="card level-card">
+          <div class="level-tag tag-blue">FINAL BOSS · 정식 오픈</div>
+          <h3>실전 운영 흐름</h3>
+          <p>
+            <strong>Dr K</strong>는 목표와 판정 기준을 정하고,
+            <strong>Claude / Codex</strong>는 개발과 QA를 하며,
+            <strong>Orca</strong>는 전체 작업실 역할을 합니다.
+          </p>
+          <div class="mission-box">
+            선생님 → Orca → Claude/Codex → GitHub → Netlify → 실제 사용
+          </div>
+          <p>
+            가장 좋은 시작은 <strong>V0.1 수기 입력판</strong>부터 만드는 것입니다.
+            OCR, 기능의학, 종합판정은 그 다음에 붙입니다.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <span class="orb"></span>
+        <h2>첫 퀘스트에 바로 쓸 프롬프트</h2>
+      </div>
+
+      <div class="footer-card">
+        <p>
+          아래 문장을 Claude Code에 그대로 넣으면
+          <strong>혈액검사 판독 웹앱 V0.1</strong> 시작용으로 적당합니다.
+        </p>
+        <code id="starterPrompt">혈액검사 판독 웹앱 V0.1을 만들어라.
+React 기반으로 시작하고 Netlify 배포를 고려해라.
+우선 기능은 3개만 구현해라.
+
+1) 검사항목 직접 입력
+2) 표준 참고범위 기반 이상 여부 표시
+3) 결과 화면 출력
+
+대상 항목은 CBC, CMP, thyroid 일부 항목으로 시작해라.
+모바일에서도 보기 쉽게 만들어라.
+추후 OCR과 모듈 구조를 붙일 수 있도록 폴더 구조를 깔끔하게 설계해라.
+디자인은 깔끔한 의료 대시보드 스타일로 해라.</code>
+        <div class="btn-row">
+          <button type="button" class="quest-btn complete" id="copyPrompt">프롬프트 복사</button>
+        </div>
+        <p class="copy-note" id="copyNote" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY = "orca-quest-cleared";
+    const TOTAL = 5;
+    const completed = new Set();
+
+    function loadCompleted(){
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        if (Array.isArray(saved)) {
+          saved.forEach((level) => {
+            const n = Number(level);
+            if (n >= 1 && n <= TOTAL) completed.add(n);
+          });
+        }
+      } catch (err) {
+        completed.clear();
+      }
+    }
+
+    function persist(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([...completed]));
+    }
+
+    function paintLevel(level, on){
+      const card = document.querySelector(`[data-level="${level}"]`);
+      if (!card) return;
+      card.classList.toggle("cleared", on);
+      const btn = card.querySelector(".complete");
+      if (btn) {
+        btn.textContent = on ? `레벨 ${level} 클리어됨` : `레벨 ${level} 클리어`;
+        btn.classList.toggle("is-done", on);
+        btn.setAttribute("aria-pressed", on ? "true" : "false");
+      }
+    }
+
+    function updateProgress(){
+      const count = completed.size;
+      const percent = (count / TOTAL) * 100;
+      document.getElementById("progressFill").style.width = percent + "%";
+      document.getElementById("progressText").textContent = `${count} / ${TOTAL} CLEAR`;
+      const bar = document.getElementById("progressBar");
+      bar.setAttribute("aria-valuenow", String(count));
+      bar.setAttribute("aria-valuetext", `${count}개 클리어, 전체 ${TOTAL}`);
+      for (let level = 1; level <= TOTAL; level += 1) {
+        paintLevel(level, completed.has(level));
+      }
+    }
+
+    function toggleLevel(level){
+      completed.add(level);
+      persist();
+      updateProgress();
+    }
+
+    function resetLevel(level){
+      completed.delete(level);
+      persist();
+      updateProgress();
+    }
+
+    document.getElementById("copyPrompt").addEventListener("click", async () => {
+      const text = document.getElementById("starterPrompt").innerText.trim();
+      const note = document.getElementById("copyNote");
+      try {
+        await navigator.clipboard.writeText(text);
+        note.textContent = "복사했습니다. Claude Code에 붙여 넣으면 됩니다.";
+      } catch (err) {
+        note.textContent = "자동 복사에 실패했습니다. 프롬프트를 직접 선택해 복사해 주세요.";
+      }
+    });
+
+    loadCompleted();
+    updateProgress();
+  </script>
+</body>
+</html>
