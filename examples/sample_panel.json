@@ -1,0 +1,10 @@
+{
+  "subject": {"sex": "female", "age_years": 34},
+  "results": [
+    {"code": "25OHD", "name": "비타민 D", "value": 18, "unit": "ng/mL"},
+    {"code": "B12", "name": "비타민 B12", "value": 180, "unit": "pg/mL"},
+    {"code": "FERRITIN", "name": "페리틴", "value": 12, "unit": "ng/mL"},
+    {"code": "HGB", "name": "헤모글로빈", "value": 10.8, "unit": "g/dL"},
+    {"code": "CRP", "name": "CRP", "value": 1.2, "unit": "mg/L"}
+  ]
+}
