@@ -1,0 +1,21 @@
+[project]
+name = "examkit"
+version = "0.1.0"
+description = "혈액검사 결과 분석을 부품처럼 끼워 맞추는 베이스 프로그램"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+examkit = "examkit.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

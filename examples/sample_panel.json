@@ -1,0 +1,11 @@
+{
+  "subject": {"sex": "female", "age_years": 34},
+  "results": [
+    {"code": "25OHD", "name": "비타민 D", "value": 18, "unit": "ng/mL", "reference_low": 30, "reference_high": 100},
+    {"code": "B12", "name": "비타민 B12", "value": 180, "unit": "pg/mL", "reference_low": 197, "reference_high": 771},
+    {"code": "FERRITIN", "name": "페리틴", "value": 12, "unit": "ng/mL", "reference_low": 15, "reference_high": 150},
+    {"code": "HGB", "name": "헤모글로빈", "value": 10.8, "unit": "g/dL", "reference_low": 12, "reference_high": 15.5},
+    {"code": "GLU", "name": "공복혈당", "value": 92, "unit": "mg/dL", "reference_low": 70, "reference_high": 99},
+    {"code": "LDH", "name": "LDH", "value": 210, "unit": "U/L"}
+  ]
+}
