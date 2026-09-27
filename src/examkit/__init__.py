@@ -1,4 +1,4 @@
-"""검사 결과 분석을 부품처럼 끼우는 베이스."""
+"""혈액검사 결과 분석을 부품처럼 끼우는 베이스."""
 
 from examkit.analyzer import Analyzer
 from examkit.models import (

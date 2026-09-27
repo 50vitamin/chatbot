@@ -25,7 +25,8 @@ def test_text_and_json_sample_hit_the_same_parts():
         "B12",
         "FERRITIN",
         "HGB",
-        "CRP",
+        "공복혈당",
+        "LDH",
     ]
     assert [finding.analyzer_id for finding in json_report.findings] == [
         finding.analyzer_id for finding in text_report.findings

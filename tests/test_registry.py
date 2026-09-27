@@ -28,6 +28,7 @@ def test_discover_loads_builtin_parts_only():
         "anemia_pattern",
         "ferritin",
         "hemoglobin",
+        "printed_reference",
         "vitamin_b12",
         "vitamin_d",
     ]

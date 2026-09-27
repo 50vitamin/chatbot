@@ -19,9 +19,11 @@ def test_parts_and_report_commands(capsys):
     sample = str(ROOT / "examples" / "sample_panel.json")
     assert main(["report", sample]) == 0
     text = capsys.readouterr().out
+    assert "혈액검사 해석" in text
     assert "비타민 D 결핍 구간" in text
-    assert "등록된 부품이 없는 항목" in text
-    assert "CRP" in text
+    assert "결과지 참고치 안: 공복혈당" in text
+    assert "참고치도 없고 맡은 부품도 없는 항목" in text
+    assert "LDH" in text
 
     assert main(["report", sample, "--json"]) == 0
     payload = json.loads(capsys.readouterr().out)

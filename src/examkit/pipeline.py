@@ -1,4 +1,4 @@
-"""등록된 부품만 순서대로 실행합니다. 검사 종류는 여기서 모릅니다."""
+"""등록된 부품만 순서대로 실행합니다. 혈액검사 항목 이름은 여기서 모릅니다."""
 
 from __future__ import annotations
 
@@ -26,9 +26,13 @@ class Pipeline:
             (part for part in self.registry.enabled() if part.scope == "panel"),
             key=lambda part: part.id,
         )
+        dedicated = [part for part in result_parts if not part.fallback]
+        fallbacks = [part for part in result_parts if part.fallback]
 
         for index, result in enumerate(panel.results):
-            matched = [part for part in result_parts if part.matches(result)]
+            matched = [part for part in dedicated if part.matches(result)]
+            if not matched:
+                matched = [part for part in fallbacks if part.matches(result)]
             if matched:
                 handled.add(index)
             for part in matched:

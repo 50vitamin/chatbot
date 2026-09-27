@@ -6,7 +6,16 @@ from dataclasses import dataclass
 from typing import ClassVar
 
 from examkit.analyzer import Analyzer
-from examkit.models import Finding, Result, Severity, Sex, Status, Subject, adult_range_note
+from examkit.models import (
+    Finding,
+    Result,
+    Severity,
+    Sex,
+    Status,
+    Subject,
+    adult_range_note,
+    sheet_note,
+)
 from examkit.normalize import format_number, normalize_unit
 
 
@@ -86,6 +95,7 @@ class RangeAnalyzer(Analyzer):
         summary = band.summary.format(value=shown, unit=self.expected_unit)
         summary += converted.note(self.expected_unit)
         summary += adult_range_note(subject)
+        summary += sheet_note(result)
         return [
             Finding(
                 analyzer_id=self.id,

@@ -15,11 +15,11 @@ from examkit.render import format_catalog
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="examkit",
-        description="검사 결과 분석 부품을 끼워 실행하는 베이스 프로그램",
+        description="혈액검사 결과 분석 부품을 끼워 실행하는 베이스 프로그램",
     )
     commands = parser.add_subparsers(dest="command", required=True)
 
-    report = commands.add_parser("report", help="패널 파일을 해석합니다")
+    report = commands.add_parser("report", help="혈액검사 결과지를 해석합니다")
     report.add_argument("path", help="JSON 또는 텍스트 패널 파일")
     report.add_argument("--json", action="store_true", help="JSON으로 출력합니다")
 

@@ -1,7 +1,7 @@
 [project]
 name = "examkit"
 version = "0.1.0"
-description = "검사 결과 분석을 부품처럼 끼워 맞추는 베이스 프로그램"
+description = "혈액검사 결과 분석을 부품처럼 끼워 맞추는 베이스 프로그램"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = []

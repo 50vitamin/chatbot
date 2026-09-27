@@ -28,6 +28,7 @@ class AnalyzerSpec:
     names: tuple[str, ...]
     uses: tuple[str, ...]
     enabled: bool
+    fallback: bool = False
 
 
 class Registry:
@@ -47,8 +48,9 @@ class Registry:
             )
         if analyzer.scope not in ("result", "panel"):
             raise RegistryError(f"{part_id} 부품의 scope는 result 또는 panel이어야 합니다.")
-        if analyzer.scope == "result" and not analyzer.codes:
-            raise RegistryError(f"{part_id} 부품은 맡을 검사 코드가 없습니다.")
+        owns_rows = bool(analyzer.codes) or analyzer.fallback or "matches" in type(analyzer).__dict__
+        if analyzer.scope == "result" and not owns_rows:
+            raise RegistryError(f"{part_id} 부품은 맡을 혈액검사 코드가 없습니다.")
         if part_id in self._items:
             raise RegistryError(f"이미 등록된 부품입니다: {part_id}")
         self._items[part_id] = analyzer
@@ -107,6 +109,7 @@ class Registry:
                 names=tuple(analyzer.names),
                 uses=tuple(analyzer.uses),
                 enabled=analyzer.id not in self._disabled,
+                fallback=analyzer.fallback,
             )
             for analyzer in sorted(self._items.values(), key=lambda item: item.id)
         )

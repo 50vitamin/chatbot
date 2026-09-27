@@ -119,4 +119,4 @@ def test_urgent_finding_is_shown_first_without_changing_machine_order():
 def test_empty_panel():
     report = Pipeline.discover().run(_panel(()))
     assert report.findings == ()
-    assert "해석할 검사 항목이 없습니다." in report.to_text()
+    assert "해석할 혈액검사 항목이 없습니다." in report.to_text()

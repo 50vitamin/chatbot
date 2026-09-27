@@ -4,12 +4,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from examkit.models import Finding, Report, Severity
+from examkit.models import Finding, Report, Severity, reference_text
 from examkit.normalize import format_number
 from examkit.registry import AnalyzerSpec
 
 DISCLAIMER = (
-    "이 결과는 등록된 분석 부품이 참고 구간과 대조한 설명입니다. "
+    "이 글은 혈액검사 결과지의 참고치와 등록된 분석 부품을 대조한 설명입니다. "
     "진단, 치료, 복용 결정을 대신하지 않습니다."
 )
 
@@ -33,9 +33,9 @@ _SEX_LABEL = {
 
 
 def render_report(report: Report) -> str:
-    lines = ["검사 결과 해석", _subject_line(report), ""]
+    lines = ["혈액검사 해석", _subject_line(report), ""]
     if not report.findings and not report.unhandled:
-        lines.append("해석할 검사 항목이 없습니다.")
+        lines.append("해석할 혈액검사 항목이 없습니다.")
         lines.append("")
     for finding in _display_findings(report):
         lines.append(f"[{_SEVERITY_LABEL[finding.severity]}] {finding.title}")
@@ -43,11 +43,14 @@ def render_report(report: Report) -> str:
         lines.append(f"부품: {finding.analyzer_id}")
         lines.append("")
     if report.unhandled:
-        lines.append("등록된 부품이 없는 항목")
+        lines.append("참고치도 없고 맡은 부품도 없는 항목")
         for result in report.unhandled:
             unit = f" {result.unit}" if result.unit else ""
-            label = result.name or result.code
-            lines.append(f"- {label}: {format_number(result.value)}{unit} ({result.code})")
+            sheet = reference_text(result)
+            suffix = f", 참고치 {sheet}" if sheet else ""
+            lines.append(
+                f"- {result.label}: {format_number(result.value)}{unit}{suffix} ({result.code})"
+            )
         lines.append("")
     lines.append(DISCLAIMER)
     return "\n".join(lines).rstrip() + "\n"
@@ -77,6 +80,9 @@ def report_to_dict(report: Report) -> dict[str, Any]:
                 "name": result.name,
                 "value": result.value,
                 "unit": result.unit,
+                "reference_low": result.reference_low,
+                "reference_high": result.reference_high,
+                "flag": result.flag,
             }
             for result in report.unhandled
         ],
@@ -88,7 +94,9 @@ def format_catalog(specs: tuple[AnalyzerSpec, ...]) -> str:
     lines: list[str] = []
     for spec in specs:
         state = "켜짐" if spec.enabled else "꺼짐"
-        if spec.scope == "result":
+        if spec.fallback:
+            extra = "다른 부품이 없는 항목의 결과지 참고치"
+        elif spec.scope == "result":
             extra = "코드: " + ", ".join(spec.codes)
         elif spec.uses:
             extra = "사용: " + ", ".join(spec.uses)
